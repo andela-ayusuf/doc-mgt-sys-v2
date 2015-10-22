@@ -55,14 +55,15 @@ exports.getAllRoles = function() {
     }
   });
 };
+currentDay = function() {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1;
+  var yyyy = today.getFullYear();
+  return dd+'-'+mm+'-'+yyyy;
+};
 
 exports.createDocument = function(title, position) {
-  var dateTime = new Date();
-  var dd = dateTime.getDate();
-  var mm = dateTime.getMonth()+1;
-  var yyyy = dateTime.getFullYear();
-  var today = dd+'-'+mm+'-'+yyyy;
-
   return Role.findOne({title: position}).then(function(role, err) {
     if (!role) {
       return Role.create({title: position});
@@ -73,7 +74,7 @@ exports.createDocument = function(title, position) {
   }).then(function(role, err) {
     return Document.create({
       title: title,
-      createdAt: today,
+      createdAt: currentDay(),
       accessibleTo: position
     }).then(function(doc, err) {
       return doc;
