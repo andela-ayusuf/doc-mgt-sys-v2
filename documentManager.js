@@ -4,6 +4,8 @@ var User = mongoose.model('User');
 var Role = mongoose.model('Role');
 var Document = mongoose.model('Document');
 
+
+// this method creates a new user
 exports.createUser = function(first, last, position) {
   return Role.findOne({title: position}).then(function(role, err) {
     if (role === []) {
@@ -23,6 +25,7 @@ exports.createUser = function(first, last, position) {
   });
 };
 
+// this method returns all users
 exports.getAllUsers = function() {
   return User.find({}, function(err, users) {
     if (err) {
@@ -34,6 +37,7 @@ exports.getAllUsers = function() {
   });
 };
 
+// this method creates a new role
 exports.createRole = function(position) {
   return Role.create({title: position}, function(err, role) {
     if (err) {
@@ -45,6 +49,7 @@ exports.createRole = function(position) {
   });
 };
 
+// this method return all roles
 exports.getAllRoles = function() {
   return Role.find({}, function(err, roles) {
     if (err) {
@@ -55,6 +60,8 @@ exports.getAllRoles = function() {
     }
   });
 };
+
+// this function return the date, used by createDocument()
 currentDay = function() {
   var today = new Date();
   var dd = today.getDate();
@@ -63,6 +70,7 @@ currentDay = function() {
   return dd+'-'+mm+'-'+yyyy;
 };
 
+// this method creates a new document
 exports.createDocument = function(title, position) {
   return Role.findOne({title: position}).then(function(role, err) {
     if (!role) {
@@ -82,6 +90,7 @@ exports.createDocument = function(title, position) {
   });
 };
 
+// this method returns all docuemnts
 exports.getAllDocuments = function(limit) {
   return Document.find().sort({date: 'desc'})
   .limit(limit).exec(function(err, docs) {
@@ -94,6 +103,7 @@ exports.getAllDocuments = function(limit) {
   });
 };
 
+// this method returns all document accessible to a role according to the date of creation
 exports.getAllDocumentsByRole = function(role, limit) {
   return Document.find({accessibleTo: role})
   .sort({date: 'desc'})
@@ -107,6 +117,7 @@ exports.getAllDocumentsByRole = function(role, limit) {
   });
 };
 
+// this method returns documents created on a particular day
 exports.getAllDocumentsByDate = function(date, limit) {
   return Document.find({createdAt: date})
   .limit(limit).then(function(docs, err) {
