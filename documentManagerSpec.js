@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Role = mongoose.model('Role');
 var Document = mongoose.model('Document');
-mongoose.connect('localhost:27017/mydb');
 
 describe('User', function() {
   beforeEach(function(done) {
@@ -25,10 +24,12 @@ describe('User', function() {
     });
   });
   it('should validate that a new user created is unique.', function(done) {
-    User.find({
-      firstname: 'Kanye'
-    }).then(function(user) {
-      expect(user.length).toBe(1);
+    user = new User();
+    user.firstname = 'Kanye';
+    user.lastname = 'West';
+    user.role = 'Rapper';
+    user.save(function(err){
+      expect(err).not.toBe(null);
       done();
     });
   });
@@ -146,7 +147,11 @@ describe('Search', function() {
       Role.remove({}, function() {
         dmsCtrl.createDocument('Karishika part 1', 'PG18').then(function(doc) {
           dmsCtrl.createDocument('Karishika part 2', 'PG18').then(function(doc) {
-            done();
+            dmsCtrl.createDocument('Karishika part 3', 'PG18').then(function(doc) {
+              dmsCtrl.createDocument('Karishika part 4', 'PG18').then(function(doc) {
+                done();
+              });
+            });
           });
         });
       });
@@ -166,7 +171,7 @@ describe('Search', function() {
     });
   });
   it('validates that all documents, limited by a specified number, that were published on a certain date, are returned when getAllDocumentsByDate is called.', function(done) {
-     currentDay = function() {
+    var currentDay = function() {
       var today = new Date();
       var dd = today.getDate();
       var mm = today.getMonth()+1;
@@ -179,3 +184,5 @@ describe('Search', function() {
     });
   });
 });
+
+
