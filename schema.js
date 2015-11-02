@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 Schema = mongoose.Schema;
+mongoose.connect('localhost:27017/mydb');
 
-var userSchema = new Schema({
+var User = new Schema({
   firstname: {
     type: String,
     required: true,
@@ -18,7 +19,7 @@ var userSchema = new Schema({
   }
 });
 
-var roleSchema = new Schema({
+var Role = new Schema({
   title: {
     type: String,
     required: true,
@@ -26,7 +27,7 @@ var roleSchema = new Schema({
   }
 });
 
-var documentSchema = new Schema({
+var Document = new Schema({
   title: {
     type: String,
     required: true
@@ -44,6 +45,8 @@ var documentSchema = new Schema({
 
 });
 
-mongoose.model('User', userSchema);
-mongoose.model('Role', roleSchema);
-mongoose.model('Document', documentSchema);
+module.exports = {
+  User: mongoose.model('User', User),
+  Role: mongoose.model('Role', Role),
+  Document: mongoose.model('Document', Document)
+};
