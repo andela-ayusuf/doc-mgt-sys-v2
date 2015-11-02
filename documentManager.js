@@ -6,6 +6,7 @@ var Document = mongoose.model('Document');
 
 
 // this method creates a new user
+// NB: the 'position' parameter is the user role
 exports.createUser = function(first, last, position) {
   return Role.findOne({title: position}).then(function(role, err) {
     if (role === []) {
@@ -19,8 +20,13 @@ exports.createUser = function(first, last, position) {
       firstname: first,
       lastname: last,
       userRole: position
-    }).then(function(user, err) {
-      return user;
+    }).then(function(user, error) {
+      if (user) {
+        return user;
+      }
+      else {
+        throw err;
+      }
     });
   });
 };
@@ -62,7 +68,7 @@ exports.getAllRoles = function() {
 };
 
 // this function return the date, used by createDocument()
-currentDay = function() {
+var currentDay = function() {
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1;
@@ -71,6 +77,7 @@ currentDay = function() {
 };
 
 // this method creates a new document
+// NB: the 'position' parameter is the user role
 exports.createDocument = function(title, position) {
   return Role.findOne({title: position}).then(function(role, err) {
     if (!role) {
